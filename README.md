@@ -1,92 +1,38 @@
-# AI Analytics Engine - Streamlit Application
+# 🤖 AI Analytics Engine
 
-## Overview
-This is a comprehensive AI-driven analytics engine that provides:
-- **Real-time Executive Insights** - Key performance indicators and organizational metrics
-- **Conversational Reporting** - Natural language queries with AI-powered responses  
-- **Anomaly Detection** - 92% accuracy ML models with real-time alerts
-- **ETL Pipeline Management** - AWS-powered data processing automation
+**Dynamic Company Analytics with Real-Time Data & Intelligent Fallbacks**
 
-## Features
-- 📊 Executive dashboard with KPIs and revenue trends
-- 💬 Interactive chat interface for data queries
-- 🔍 Real-time anomaly detection with SageMaker models
-- ⚙️ ETL pipeline monitoring (AWS Glue, Step Functions)
-- 📱 Responsive design optimized for all devices
+A professional-grade financial analysis platform built with Streamlit that provides comprehensive company analytics, real-time market data, AI-powered insights, and advanced technical analysis. Perfect for investors, analysts, and data science portfolios.
 
-## Local Development
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-url.streamlit.app)
 
-### Prerequisites
-- Python 3.8 or higher
-- pip package manager
+## 🎯 **Overview**
 
-### Installation
-1. Clone this repository
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+The AI Analytics Engine transforms complex financial data into actionable insights through an intuitive web interface. It combines real-time market data with AI-powered analysis to deliver enterprise-grade financial analytics that adapt to API limitations with intelligent fallback systems.
 
-### Running Locally
-```bash
-streamlit run app.py
-```
+## ✨ **Key Features**
 
-The application will be available at `http://localhost:8501`
+### 📊 **Real-Time Financial Data**
+- **Live Market Data**: Current stock prices, market capitalization, and financial ratios
+- **Dynamic Company Selection**: 15+ popular companies plus custom ticker input
+- **Comprehensive Metrics**: P/E ratios, profit margins, revenue growth, and more
+- **Historical Data**: 6-month stock price and volume analysis
 
-## Deployment Options
+### 🏢 **Four Comprehensive Dashboard Sections**
 
-### Option 1: Streamlit Community Cloud (Recommended - FREE)
-1. Fork this repository to your GitHub account
-2. Visit [share.streamlit.io](https://share.streamlit.io)
-3. Click "New app" and connect your GitHub repository
-4. Select this repository and set `app.py` as the main file
-5. Click "Deploy"
+#### 1. 🏢 **Company Overview**
+- Detailed company profiles with business descriptions
+- Key financial metrics with 30-day performance tracking
+- AI-generated market insights and sector analysis
+- Employee count, headquarters location, and industry classification
 
-Your app will be live at: `https://your-app-name.streamlit.app`
+#### 2. 📈 **Financial Dashboard** 
+- Interactive stock price charts with Plotly visualizations
+- Executive financial summary with key performance indicators
+- Trading volume analysis and price statistics
+- Period high/low tracking with average volume metrics
 
-### Option 2: Heroku
-1. Install Heroku CLI
-2. Create a `Procfile` with: `web: sh setup.sh && streamlit run app.py`
-3. Deploy:
-   ```bash
-   heroku create your-app-name
-   git push heroku main
-   ```
-
-### Option 3: Docker
-```dockerfile
-FROM python:3.9-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-EXPOSE 8501
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-```
-
-## Architecture
-- **Frontend**: Streamlit with custom CSS styling
-- **Visualization**: Plotly for interactive charts
-- **Data Processing**: Pandas and NumPy
-- **ML Integration**: Simulated SageMaker anomaly detection
-- **Cloud Services**: AWS Glue, Step Functions, SageMaker
-
-## Key Metrics Demonstrated
-- Total Revenue: $12.5M with 8.5% monthly growth
-- Cost Savings: $2.1M annually (2,000+ hours automated)
-- AI Model Accuracy: 92% for anomaly detection
-- Pipeline Success Rate: 80% with real-time monitoring
-
-## Project Structure
-```
-ai-analytics-engine/
-├── app.py              # Main Streamlit application
-├── requirements.txt    # Python dependencies
-├── README.md          # This file
-└── .streamlit/        # Streamlit configuration (optional)
-    └── config.toml
-```
-
-## License
-MIT License - Feel free to use and modify for your projects.
+#### 3. 💬 **AI Insights Chat**
+- Contextual AI responses based on company data
+- Interactive Q&A about competitive advantages, market outlook, and risks
+- Conversation
