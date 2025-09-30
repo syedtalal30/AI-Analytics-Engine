@@ -20,6 +20,7 @@ st.set_page_config(
 )
 
 # Custom CSS for professional styling
+# Custom CSS for professional styling
 st.markdown("""
 <style>
     .main-header {
@@ -45,11 +46,36 @@ st.markdown("""
     .warning-metric { border-left-color: #f59e0b; }
     .error-metric { border-left-color: #ef4444; }
     .company-info {
-        background: #f8fafc;
-        padding: 1rem;
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid #3b82f6;
         margin-bottom: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .company-info h2 {
+        color: white !important;
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+    }
+    .company-info p {
+        color: #e5e7eb !important;
+        margin-bottom: 0.8rem;
+        line-height: 1.5;
+    }
+    .company-info strong {
+        color: #fbbf24 !important;
+        font-weight: 600;
+    }
+    .company-info a {
+        color: #60a5fa !important;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .company-info a:hover {
+        color: #93c5fd !important;
+        text-decoration: underline;
     }
     .demo-notice {
         background: #eff6ff;
