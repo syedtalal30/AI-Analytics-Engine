@@ -94,7 +94,7 @@ FALLBACK_DATA = {
         "pe_ratio": 28.5,
         "profit_margin": 25.3,
         "revenue_growth": 8.5,
-        "description": "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide."
+        "description": "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. The company serves consumers, and small and mid-sized businesses; and the education, enterprise, and government markets."
     },
     "NVDA": {
         "name": "NVIDIA Corporation",
@@ -107,7 +107,7 @@ FALLBACK_DATA = {
         "pe_ratio": 65.2,
         "profit_margin": 32.8,
         "revenue_growth": 126.5,
-        "description": "NVIDIA Corporation operates as a visual computing company worldwide, specializing in graphics processing units and AI computing."
+        "description": "NVIDIA Corporation operates as a visual computing company worldwide, specializing in graphics processing units and AI computing platforms for gaming, professional visualization, datacenter, and automotive markets."
     },
     "MSFT": {
         "name": "Microsoft Corporation",
@@ -120,7 +120,7 @@ FALLBACK_DATA = {
         "pe_ratio": 32.1,
         "profit_margin": 36.7,
         "revenue_growth": 15.2,
-        "description": "Microsoft Corporation develops, licenses, and supports software, services, devices, and solutions worldwide."
+        "description": "Microsoft Corporation develops, licenses, and supports software, services, devices, and solutions worldwide including Windows operating systems, Office productivity suite, and Azure cloud services."
     },
     "AMZN": {
         "name": "Amazon.com Inc.",
@@ -133,7 +133,7 @@ FALLBACK_DATA = {
         "pe_ratio": 44.8,
         "profit_margin": 5.1,
         "revenue_growth": 12.6,
-        "description": "Amazon.com Inc. engages in the retail sale of consumer products and subscriptions in North America and internationally."
+        "description": "Amazon.com Inc. engages in the retail sale of consumer products and subscriptions in North America and internationally through online and physical stores, and Amazon Web Services cloud computing platform."
     },
     "TSLA": {
         "name": "Tesla Inc.",
@@ -146,7 +146,7 @@ FALLBACK_DATA = {
         "pe_ratio": 62.3,
         "profit_margin": 9.6,
         "revenue_growth": 18.8,
-        "description": "Tesla Inc. designs, develops, manufactures, leases, and sells electric vehicles and energy generation and storage systems."
+        "description": "Tesla Inc. designs, develops, manufactures, leases, and sells electric vehicles and energy generation and storage systems worldwide, along with autonomous driving technology and software."
     },
     "GOOGL": {
         "name": "Alphabet Inc.",
@@ -159,7 +159,7 @@ FALLBACK_DATA = {
         "pe_ratio": 24.8,
         "profit_margin": 21.2,
         "revenue_growth": 13.8,
-        "description": "Alphabet Inc. provides various products and platforms in the United States, Europe, the Middle East, Africa, the Asia-Pacific, Canada, and Latin America."
+        "description": "Alphabet Inc. provides various products and platforms worldwide including Google Search, YouTube, Android, Google Cloud, and other internet services and products."
     },
     "META": {
         "name": "Meta Platforms Inc.",
@@ -207,12 +207,12 @@ def generate_realistic_stock_data(symbol, base_price, days=180):
         price_change = np.random.normal(0, daily_volatility)
         
         # Add some trend and momentum
-        if i > 20:
-            recent_trend = (prices[-1] - prices[-20]) / prices[-20] if len(prices) >= 20 else 0
+        if i > 20 and len(prices) >= 20:
+            recent_trend = (prices[-1] - prices[-20]) / prices[-20]
             momentum_factor = recent_trend * 0.1
             price_change += momentum_factor
         
-        current_price = max(current_price * (1 + price_change), base_price * 0.5)  # Don't go below 50% of base
+        current_price = max(current_price * (1 + price_change), base_price * 0.5)
         prices.append(current_price)
         
         # Generate realistic volume
@@ -555,9 +555,6 @@ if st.session_state.company_data:
     st.sidebar.markdown(f"**{company_info['name']}** ({company_info['symbol']})")
     st.sidebar.markdown(f"*{company_info['sector']} • {company_info['industry']}*")
 
-# [THE REST OF THE DASHBOARD SECTIONS WOULD CONTINUE HERE]
-# [Due to length limits, I'll provide the key sections structure]
-
 # Display company analysis if available
 if st.session_state.company_data:
     company_data = st.session_state.company_data
@@ -565,22 +562,497 @@ if st.session_state.company_data:
     # Company Overview Section
     if selected_section == "🏢 Company Overview":
         st.header("🏢 Company Overview & Profile")
-        # [Complete implementation with all metrics and insights]
+        
+        # Show data source information transparently
+        data_source = company_data.get("data_source", "yahoo_finance")
+        if data_source == "demo":
+            st.info("🎯 **Professional Demo Mode**: Demonstrating full analytical capabilities with realistic financial data")
+        
+        # Company basic info with professional presentation
+        info = company_data["company_info"]
+        metrics = company_data["financial_metrics"]
+        
+        st.markdown(f"""
+        <div class="company-info">
+            <h2>{info['name']} ({info['symbol']})</h2>
+            <p><strong>🏭 Sector:</strong> {info['sector']} | <strong>🔧 Industry:</strong> {info['industry']}</p>
+            <p><strong>🌍 Headquarters:</strong> {info['country']} | <strong>👥 Employees:</strong> {info['employees']:,}</p>
+            <p><strong>📝 Business Overview:</strong> {info['description']}</p>
+            {f'<p><strong>🌐 Website:</strong> <a href="{info["website"]}" target="_blank">{info["website"]}</a></p>' if info.get('website') and 'http' in str(info['website']) else ''}
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Key financial metrics in professional layout
+        st.subheader("📊 Key Financial Metrics")
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.metric(
+                "💰 Stock Price",
+                f"${metrics['current_price']:.2f}",
+                delta=f"{metrics['monthly_growth']:.1f}% (30d)",
+                help="Current stock price with 30-day performance"
+            )
+            
+        with col2:
+            market_cap_b = metrics['market_cap'] / 1e9
+            st.metric(
+                "🏢 Market Cap",
+                f"${market_cap_b:.1f}B",
+                delta=f"P/E: {metrics['pe_ratio']:.1f}" if metrics['pe_ratio'] > 0 else "P/E: N/A",
+                help="Total market capitalization and price-to-earnings ratio"
+            )
+            
+        with col3:
+            revenue_b = metrics['total_revenue'] / 1e9 if metrics['total_revenue'] > 0 else 0
+            st.metric(
+                "📈 Annual Revenue",
+                f"${revenue_b:.1f}B" if revenue_b > 0 else "N/A",
+                delta=f"{metrics['revenue_growth']:.1f}% growth" if metrics['revenue_growth'] != 0 else "N/A",
+                help="Total annual revenue with year-over-year growth rate"
+            )
+            
+        with col4:
+            st.metric(
+                "💎 Profit Margin",
+                f"{metrics['profit_margin']:.1f}%" if metrics['profit_margin'] > 0 else "N/A",
+                delta=f"Efficiency: {metrics['operational_efficiency']:.1f}%",
+                help="Net profit margin and operational efficiency metrics"
+            )
+        
+        # Professional AI-generated insights
+        st.subheader("🤖 AI-Generated Market Insights")
+        insights = generate_company_insights(company_data)
+        
+        for i, insight in enumerate(insights):
+            if i == 0 and "Demo Mode" in insight:
+                st.info(insight)
+            else:
+                st.success(insight)
     
-    # Financial Dashboard Section  
+    # Financial Dashboard Section
     elif selected_section == "📈 Financial Dashboard":
         st.header("📈 Advanced Financial Dashboard")
-        # [Complete implementation with charts and KPIs]
+        
+        metrics = company_data["financial_metrics"]
+        stock_data = company_data["stock_data"]
+        info = company_data["company_info"]
+        
+        # Executive summary
+        st.subheader("📋 Executive Financial Summary")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown(f"""
+            **Company:** {info['name']} ({info['symbol']})  
+            **Sector:** {info['sector']} - {info['industry']}  
+            **Market Cap:** ${metrics['market_cap']/1e9:.1f}B  
+            **Employees:** {info['employees']:,}  
+            """)
+        
+        with col2:
+            st.markdown(f"""
+            **Stock Price:** ${metrics['current_price']:.2f}  
+            **30-Day Performance:** {metrics['monthly_growth']:.1f}%  
+            **P/E Ratio:** {metrics['pe_ratio']:.1f if metrics['pe_ratio'] > 0 else 'N/A'}  
+            **Profit Margin:** {metrics['profit_margin']:.1f}%  
+            """)
+        
+        # Detailed financial KPIs
+        st.subheader("💼 Detailed Financial KPIs")
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.metric("Current Price", f"${metrics['current_price']:.2f}")
+            st.metric("P/E Ratio", f"{metrics['pe_ratio']:.1f}" if metrics['pe_ratio'] > 0 else "N/A")
+            
+        with col2:
+            st.metric("Market Cap", f"${metrics['market_cap']/1e9:.1f}B")
+            st.metric("Profit Margin", f"{metrics['profit_margin']:.1f}%")
+            
+        with col3:
+            st.metric("Revenue Growth", f"{metrics['revenue_growth']:.1f}%")
+            st.metric("30-Day Change", f"{metrics['monthly_growth']:.1f}%")
+            
+        with col4:
+            st.metric("Operational Efficiency", f"{metrics['operational_efficiency']:.1f}%")
+            st.metric("Employee Satisfaction", f"{metrics['employee_satisfaction']:.0f}%")
+        
+        # Interactive stock price chart
+        st.subheader("📊 Stock Price Performance Analysis")
+        
+        if not stock_data.empty and len(stock_data) > 0:
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatter(
+                x=stock_data.index,
+                y=stock_data['Close'],
+                mode='lines',
+                name='Stock Price',
+                line=dict(color='#3b82f6', width=2),
+                hovertemplate='<b>Stock Price</b><br>Date: %{x}<br>Price: $%{y:.2f}<extra></extra>'
+            ))
+            
+            fig.update_layout(
+                title=f"{info['name']} ({info['symbol']}) - Stock Price Performance",
+                xaxis_title="Date",
+                yaxis_title="Price (USD)",
+                height=500,
+                showlegend=False,
+                hovermode='x unified'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Trading volume analysis
+            st.subheader("📊 Trading Volume Analysis")
+            fig_volume = go.Figure()
+            
+            fig_volume.add_trace(go.Bar(
+                x=stock_data.index,
+                y=stock_data['Volume'],
+                name='Daily Volume',
+                marker_color='#10b981',
+                hovertemplate='<b>Trading Volume</b><br>Date: %{x}<br>Volume: %{y:,.0f}<extra></extra>'
+            ))
+            
+            fig_volume.update_layout(
+                title="Daily Trading Volume Trends",
+                xaxis_title="Date",
+                yaxis_title="Volume (Shares)",
+                height=350,
+                showlegend=False
+            )
+            
+            st.plotly_chart(fig_volume, use_container_width=True)
+            
+            # Price statistics
+            st.subheader("📈 Price Statistics")
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.metric("Period High", f"${stock_data['Close'].max():.2f}")
+            with col2:
+                st.metric("Period Low", f"${stock_data['Close'].min():.2f}")
+            with col3:
+                avg_volume = stock_data['Volume'].mean()
+                st.metric("Avg Daily Volume", f"{avg_volume:,.0f}")
+        else:
+            st.warning("⚠️ Stock data not available for charting")
     
     # AI Insights Chat Section
     elif selected_section == "💬 AI Insights Chat":
         st.header("💬 AI-Powered Financial Analysis Chat")
-        # [Complete implementation with contextual AI responses]
+        st.subheader(f"Interactive Analysis: {company_data['company_info']['name']}")
+        
+        # Chat interface with enhanced prompts
+        col1, col2 = st.columns([3, 1])
+        
+        with col1:
+            query_input = st.text_input(
+                "Ask detailed questions about the company:",
+                placeholder=f"e.g., What are {company_data['company_info']['name']}'s competitive advantages? How is the stock performing?",
+                key="company_query"
+            )
+        
+        with col2:
+            if st.button("🤖 Ask AI Analyst", type="primary"):
+                if query_input:
+                    # Enhanced AI response simulation
+                    response_time = np.random.uniform(1.2, 2.8)
+                    
+                    with st.spinner(f"🔍 Analyzing {company_data['company_info']['name']}..."):
+                        time.sleep(min(response_time, 2.5))
+                    
+                    company_name = company_data['company_info']['name']
+                    metrics = company_data['financial_metrics']
+                    info = company_data['company_info']
+                    
+                    # Enhanced contextual AI responses
+                    query_lower = query_input.lower()
+                    
+                    if any(word in query_lower for word in ['price', 'stock', 'valuation', 'trading']):
+                        response = f"""
+                        📊 **Stock Analysis for {company_name}:**
+                        
+                        Current trading price is **${metrics['current_price']:.2f}** with a market capitalization of **${metrics['market_cap']/1e9:.1f}B**. 
+                        
+                        **Recent Performance:** {metrics['monthly_growth']:.1f}% movement over the past 30 days, indicating {'strong momentum' if metrics['monthly_growth'] > 5 else 'moderate volatility' if metrics['monthly_growth'] > -5 else 'recent challenges'}.
+                        
+                        **Valuation Metrics:** P/E ratio of {metrics['pe_ratio']:.1f} suggests {'premium valuation reflecting growth expectations' if metrics['pe_ratio'] > 25 else 'reasonable market pricing' if metrics['pe_ratio'] > 15 else 'potential value opportunity'}.
+                        """
+                        
+                    elif any(word in query_lower for word in ['growth', 'revenue', 'financial', 'earnings']):
+                        response = f"""
+                        💰 **Financial Performance Analysis:**
+                        
+                        **Revenue Metrics:** {company_name} shows {metrics['revenue_growth']:.1f}% revenue growth with a {metrics['profit_margin']:.1f}% profit margin.
+                        
+                        **Operational Excellence:** Current operational efficiency stands at {metrics['operational_efficiency']:.1f}%, indicating {'exceptional' if metrics['operational_efficiency'] > 90 else 'strong' if metrics['operational_efficiency'] > 80 else 'adequate'} management execution.
+                        
+                        **Market Position:** Operating in the {info['sector']} sector, specifically {info['industry']}, with {info['employees']:,} employees globally.
+                        """
+                        
+                    elif any(word in query_lower for word in ['competitive', 'advantage', 'moat', 'strength']):
+                        sector_advantages = {
+                            "Technology": "innovation capabilities, platform ecosystems, and network effects",
+                            "Healthcare": "regulatory barriers, patent protection, and essential service provision",
+                            "Financial Services": "regulatory compliance, customer relationships, and capital requirements",
+                            "Consumer Cyclical": "brand recognition, distribution networks, and supply chain efficiency"
+                        }
+                        advantage = sector_advantages.get(info['sector'], "market position, operational efficiency, and customer relationships")
+                        
+                        response = f"""
+                        🏆 **Competitive Analysis for {company_name}:**
+                        
+                        **Industry Position:** As a leading {info['industry']} company, {company_name} benefits from {advantage}.
+                        
+                        **Financial Strength:** With {metrics['profit_margin']:.1f}% profit margins and {metrics['operational_efficiency']:.1f}% operational efficiency, the company demonstrates strong execution capabilities.
+                        
+                        **Scale Advantage:** Employing {info['employees']:,} people worldwide provides significant operational scale and market reach.
+                        
+                        **Market Valuation:** Current ${metrics['market_cap']/1e9:.1f}B market cap reflects investor confidence in the company's strategic position.
+                        """
+                        
+                    elif any(word in query_lower for word in ['future', 'outlook', 'prediction', 'forecast']):
+                        outlook = 'positive' if metrics['monthly_growth'] > 0 and metrics['revenue_growth'] > 5 else 'cautious'
+                        response = f"""
+                        🔮 **Market Outlook Analysis:**
+                        
+                        **Performance Trajectory:** Recent {metrics['monthly_growth']:.1f}% monthly performance suggests {outlook} near-term momentum.
+                        
+                        **Growth Profile:** {metrics['revenue_growth']:.1f}% revenue growth indicates {'strong expansion potential' if metrics['revenue_growth'] > 10 else 'steady growth trajectory' if metrics['revenue_growth'] > 0 else 'potential challenges requiring strategic focus'}.
+                        
+                        **Valuation Context:** P/E ratio of {metrics['pe_ratio']:.1f} {'suggests market expects continued growth' if metrics['pe_ratio'] > 20 else 'indicates reasonable expectations' if metrics['pe_ratio'] > 15 else 'may present value opportunity'}.
+                        
+                        **Sector Dynamics:** The {info['sector']} sector continues to evolve, with companies like {company_name} positioned for {'continued innovation leadership' if info['sector'] == 'Technology' else 'defensive stability' if info['sector'] == 'Healthcare' else 'market adaptation'}.
+                        """
+                        
+                    else:
+                        response = f"""
+                        🤖 **Comprehensive Analysis Summary:**
+                        
+                        **Company Profile:** {company_name} is a {info['sector']} leader operating in {info['industry']} with {info['employees']:,} employees.
+                        
+                        **Current Metrics:** Trading at ${metrics['current_price']:.2f} (${metrics['market_cap']/1e9:.1f}B market cap) with {metrics['operational_efficiency']:.1f}% operational efficiency.
+                        
+                        **Key Strengths:** {metrics['profit_margin']:.1f}% profit margin demonstrates strong profitability, while {metrics['revenue_growth']:.1f}% revenue growth shows business momentum.
+                        
+                        **What would you like to explore further?** Ask about competitive advantages, financial performance, market outlook, or risk factors.
+                        """
+                    
+                    st.success(response)
+                    
+                    # Add to conversation history with enhanced metadata
+                    conversation = {
+                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "company": company_name,
+                        "company_symbol": info['symbol'],
+                        "query": query_input,
+                        "response": response,
+                        "response_time": response_time,
+                        "query_category": "financial" if any(word in query_lower for word in ['revenue', 'financial', 'growth']) else "market" if any(word in query_lower for word in ['stock', 'price']) else "strategic"
+                    }
+                    st.session_state.conversations.append(conversation)
+        
+        # Enhanced conversation history display
+        if st.session_state.conversations:
+            st.subheader("🕒 Recent Analysis History")
+            
+            # Show conversation metrics
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Total Queries", len(st.session_state.conversations))
+            with col2:
+                avg_response = np.mean([c['response_time'] for c in st.session_state.conversations])
+                st.metric("Avg Response Time", f"{avg_response:.1f}s")
+            with col3:
+                companies_analyzed = len(set([c['company_symbol'] for c in st.session_state.conversations]))
+                st.metric("Companies Analyzed", companies_analyzed)
+            
+            # Conversation history
+            for conv in reversed(st.session_state.conversations[-5:]):  # Show last 5
+                with st.expander(f"🏢 {conv['company']}: {conv['query'][:60]}... - {conv['timestamp']}"):
+                    st.markdown(f"**Company:** {conv['company']} ({conv['company_symbol']})")
+                    st.markdown(f"**Question:** {conv['query']}")
+                    st.markdown(f"**AI Analysis:** {conv['response']}")
+                    st.markdown(f"**Response Time:** {conv['response_time']:.1f}s | **Category:** {conv.get('query_category', 'general').title()}")
     
     # Technical Analysis Section
     elif selected_section == "📊 Technical Analysis":
         st.header("📊 Advanced Technical Analysis")
-        # [Complete implementation with RSI, moving averages, etc.]
+        
+        stock_data = company_data["stock_data"]
+        info = company_data["company_info"]
+        
+        if not stock_data.empty and len(stock_data) > 0:
+            # Calculate technical indicators
+            stock_data_copy = stock_data.copy()
+            stock_data_copy['SMA_20'] = stock_data_copy['Close'].rolling(window=min(20, len(stock_data_copy))).mean()
+            stock_data_copy['SMA_50'] = stock_data_copy['Close'].rolling(window=min(50, len(stock_data_copy))).mean()
+            
+            # RSI calculation (simplified but realistic)
+            delta = stock_data_copy['Close'].diff()
+            gain = (delta.where(delta > 0, 0)).rolling(window=min(14, len(stock_data_copy))).mean()
+            loss = (-delta.where(delta < 0, 0)).rolling(window=min(14, len(stock_data_copy))).mean()
+            rs = gain / loss
+            stock_data_copy['RSI'] = 100 - (100 / (1 + rs))
+            
+            # Enhanced price chart with moving averages
+            st.subheader("📈 Price Action & Moving Averages")
+            
+            fig = go.Figure()
+            
+            # Main price line
+            fig.add_trace(go.Scatter(
+                x=stock_data_copy.index,
+                y=stock_data_copy['Close'],
+                mode='lines',
+                name='Close Price',
+                line=dict(color='#3b82f6', width=3),
+                hovertemplate='<b>Close Price</b><br>Date: %{x}<br>Price: $%{y:.2f}<extra></extra>'
+            ))
+            
+            # 20-day SMA
+            if not stock_data_copy['SMA_20'].isna().all():
+                fig.add_trace(go.Scatter(
+                    x=stock_data_copy.index,
+                    y=stock_data_copy['SMA_20'],
+                    mode='lines',
+                    name='SMA 20',
+                    line=dict(color='#f59e0b', width=2, dash='dash'),
+                    hovertemplate='<b>20-Day SMA</b><br>Date: %{x}<br>Price: $%{y:.2f}<extra></extra>'
+                ))
+            
+            # 50-day SMA
+            if not stock_data_copy['SMA_50'].isna().all():
+                fig.add_trace(go.Scatter(
+                    x=stock_data_copy.index,
+                    y=stock_data_copy['SMA_50'],
+                    mode='lines',
+                    name='SMA 50',
+                    line=dict(color='#10b981', width=2, dash='dot'),
+                    hovertemplate='<b>50-Day SMA</b><br>Date: %{x}<br>Price: $%{y:.2f}<extra></extra>'
+                ))
+            
+            fig.update_layout(
+                title=f"{info['name']} ({info['symbol']}) - Technical Analysis Chart",
+                xaxis_title="Date",
+                yaxis_title="Price (USD)",
+                height=600,
+                legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # RSI Indicator Chart
+            if not stock_data_copy['RSI'].isna().all():
+                st.subheader("📊 Relative Strength Index (RSI)")
+                
+                fig_rsi = go.Figure()
+                
+                fig_rsi.add_trace(go.Scatter(
+                    x=stock_data_copy.index,
+                    y=stock_data_copy['RSI'],
+                    mode='lines',
+                    name='RSI',
+                    line=dict(color='#8b5cf6', width=2),
+                    fill='tonexty',
+                    hovertemplate='<b>RSI</b><br>Date: %{x}<br>RSI: %{y:.1f}<extra></extra>'
+                ))
+                
+                # Add overbought/oversold reference lines
+                fig_rsi.add_hline(y=70, line_dash="dash", line_color="red", 
+                                annotation_text="Overbought (70)", annotation_position="bottom right")
+                fig_rsi.add_hline(y=30, line_dash="dash", line_color="green", 
+                                annotation_text="Oversold (30)", annotation_position="top right")
+                fig_rsi.add_hline(y=50, line_dash="dot", line_color="gray", 
+                                annotation_text="Neutral (50)", annotation_position="top left")
+                
+                fig_rsi.update_layout(
+                    title="RSI Momentum Indicator (14-period)",
+                    xaxis_title="Date",
+                    yaxis_title="RSI Value",
+                    height=350,
+                    yaxis=dict(range=[0, 100]),
+                    showlegend=False
+                )
+                
+                st.plotly_chart(fig_rsi, use_container_width=True)
+                
+                # Technical analysis summary
+                st.subheader("📋 Technical Analysis Summary")
+                
+                current_price = stock_data_copy['Close'].iloc[-1]
+                current_sma20 = stock_data_copy['SMA_20'].iloc[-1] if not pd.isna(stock_data_copy['SMA_20'].iloc[-1]) else None
+                current_sma50 = stock_data_copy['SMA_50'].iloc[-1] if not pd.isna(stock_data_copy['SMA_50'].iloc[-1]) else None
+                current_rsi = stock_data_copy['RSI'].iloc[-1] if not pd.isna(stock_data_copy['RSI'].iloc[-1]) else None
+                
+                col1, col2, col3, col4 = st.columns(4)
+                
+                with col1:
+                    if current_sma20:
+                        trend = "Bullish 📈" if current_price > current_sma20 else "Bearish 📉"
+                        st.metric("Short-term Trend", trend, 
+                                delta=f"Price vs SMA20: {((current_price - current_sma20) / current_sma20 * 100):.1f}%")
+                    else:
+                        st.metric("Short-term Trend", "N/A")
+                        
+                with col2:
+                    if current_sma50:
+                        long_trend = "Bullish 📈" if current_price > current_sma50 else "Bearish 📉"
+                        st.metric("Long-term Trend", long_trend,
+                                delta=f"Price vs SMA50: {((current_price - current_sma50) / current_sma50 * 100):.1f}%")
+                    else:
+                        st.metric("Long-term Trend", "N/A")
+                        
+                with col3:
+                    if current_rsi:
+                        if current_rsi > 70:
+                            rsi_signal = "Overbought ⚠️"
+                        elif current_rsi < 30:
+                            rsi_signal = "Oversold 💰"
+                        else:
+                            rsi_signal = "Neutral ⚖️"
+                        st.metric("RSI Signal", rsi_signal, delta=f"RSI: {current_rsi:.1f}")
+                    else:
+                        st.metric("RSI Signal", "N/A")
+                        
+                with col4:
+                    volatility = stock_data_copy['Close'].pct_change().std() * 100
+                    vol_level = "High" if volatility > 3 else "Medium" if volatility > 1.5 else "Low"
+                    st.metric("Price Volatility", f"{vol_level} 📊", delta=f"{volatility:.1f}% daily")
+                
+                # Professional technical insights
+                st.subheader("🎯 Technical Insights")
+                
+                insights = []
+                
+                if current_sma20 and current_sma50:
+                    if current_sma20 > current_sma50:
+                        insights.append("✅ **Golden Cross Pattern**: Short-term SMA above long-term SMA indicates bullish momentum")
+                    else:
+                        insights.append("⚠️ **Death Cross Pattern**: Short-term SMA below long-term SMA suggests bearish pressure")
+                
+                if current_rsi:
+                    if current_rsi > 70:
+                        insights.append("🔴 **Overbought Condition**: RSI above 70 suggests potential selling pressure ahead")
+                    elif current_rsi < 30:
+                        insights.append("🟢 **Oversold Condition**: RSI below 30 indicates potential buying opportunity")
+                    else:
+                        insights.append("🟡 **Neutral RSI**: Current momentum indicators suggest balanced market conditions")
+                
+                if volatility > 3:
+                    insights.append("⚡ **High Volatility**: Elevated price swings create both opportunities and risks")
+                elif volatility < 1:
+                    insights.append("📊 **Low Volatility**: Stable price action suggests consolidation phase")
+                
+                for insight in insights:
+                    st.info(insight)
+            else:
+                st.warning("⚠️ Insufficient data for RSI calculation")
+        else:
+            st.warning("⚠️ Insufficient stock data for technical analysis")
 
 else:
     st.error("❌ Unable to load company data. Please try selecting a different company or refresh the page.")
