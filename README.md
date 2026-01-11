@@ -84,9 +84,9 @@ A: Refresh the page and ensure stable internet connection. Fallback data will lo
 
 ## 📞 **Support**
 
-- **Issues**: [GitHub Issues](https://github.com/your-username/ai-analytics-engine/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/ai-analytics-engine/discussions)
-- **Email**: your.email@domain.com
+- **Issues**: [GitHub Issues](https://github.com/syedtalal30/ai-analytics-engine/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/syedtalal30/ai-analytics-engine/discussions)
+- **Email**: talalamjad800@gmail.com
 
 ## 🚀 **What's Next?**
 
@@ -137,10 +137,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ Star this repository if you found it helpful!**
 
-**[Live Demo](https://your-app-url.streamlit.app) | [Report Bug](https://github.com/your-username/ai-analytics-engine/issues) | [Request Feature](https://github.com/your-username/ai-analytics-engine/issues)**
+**[Live Demo](https://my-ai-analytics.streamlit.app/)) | [Report Bug](https://github.com/syedtalal30/ai-analytics-engine/issues) | [Request Feature](https://github.com/syedtalal30/ai-analytics-engine/issues)**
 
 *Built with ❤️ using Streamlit*
 
-**Made by [Your Name] • Follow [@yourusername](https://github.com/yourusername)**
+**Made by Talal Amjad  • Follow (https://github.com/syedtalal30)
 
 </div>
